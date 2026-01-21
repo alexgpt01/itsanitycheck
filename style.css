@@ -10,14 +10,14 @@
   transition: filter 0.3s ease, opacity 0.3s ease;
 }
 
-.blur-text:hover {
+.blur-text:hover:not(.is-revealed) {
   filter: blur(0);
 }
 
 /* When revealed (scrolled past questions section), always show unblurred */
 .blur-text.is-revealed {
   filter: blur(0) !important;
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 /* Mobile: blur until scrolled into view */

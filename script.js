@@ -55,8 +55,12 @@
     
     if (!questionsSection || !blurTextElements.length) return;
 
+    let isRevealed = false;
+
     // Function to reveal all blur text
     function revealAllBlurText() {
+      if (isRevealed) return; // Only reveal once
+      isRevealed = true;
       blurTextElements.forEach(el => {
         try {
           el.classList.add('is-revealed');
@@ -66,41 +70,58 @@
       });
     }
 
-    // Check if IntersectionObserver is supported
-    if (!('IntersectionObserver' in window)) {
-      // Fallback: reveal all immediately if observer not supported
-      revealAllBlurText();
-      return;
+    // Function to check if section has been scrolled past
+    function checkScrollPosition() {
+      if (isRevealed) return;
+      
+      try {
+        const rect = questionsSection.getBoundingClientRect();
+        // If the bottom of the section is above the top of the viewport, it's been scrolled past
+        if (rect.bottom < 0) {
+          revealAllBlurText();
+        }
+      } catch (error) {
+        console.warn('Error checking scroll position:', error);
+      }
     }
 
-    // Observe the questions section - when it's scrolled past, reveal all blur text
-    try {
-      const sectionObserver = new IntersectionObserver(
-        (entries) => {
-          try {
-            for (const entry of entries) {
-              // When the section is completely out of view (scrolled past)
-              if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-                revealAllBlurText();
-                sectionObserver.unobserve(entry.target);
+    // Use IntersectionObserver if available, otherwise fall back to scroll listener
+    if ('IntersectionObserver' in window) {
+      try {
+        const sectionObserver = new IntersectionObserver(
+          (entries) => {
+            try {
+              for (const entry of entries) {
+                // When the section bottom has passed the top of viewport
+                if (!entry.isIntersecting) {
+                  const rect = entry.boundingClientRect;
+                  if (rect.bottom < 0) {
+                    revealAllBlurText();
+                    sectionObserver.unobserve(entry.target);
+                  }
+                }
               }
+            } catch (error) {
+              console.warn('Error in section observer callback:', error);
             }
-          } catch (error) {
-            console.warn('Error in section observer callback:', error);
+          },
+          {
+            threshold: [0, 1],
+            rootMargin: "0px"
           }
-        },
-        {
-          threshold: 0,
-          // Trigger when section top passes the top of viewport
-          rootMargin: "0px"
-        }
-      );
+        );
 
-      sectionObserver.observe(questionsSection);
-    } catch (error) {
-      console.warn('Error creating section observer:', error);
-      // Fallback: reveal all if observer creation fails
-      revealAllBlurText();
+        sectionObserver.observe(questionsSection);
+      } catch (error) {
+        console.warn('Error creating section observer:', error);
+        // Fallback to scroll listener
+        window.addEventListener('scroll', checkScrollPosition, { passive: true });
+        checkScrollPosition(); // Check initial state
+      }
+    } else {
+      // Fallback: use scroll listener
+      window.addEventListener('scroll', checkScrollPosition, { passive: true });
+      checkScrollPosition(); // Check initial state
     }
   } catch (error) {
     console.warn('Error initializing blur text reveal:', error);
