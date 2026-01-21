@@ -1,55 +1,124 @@
 // Header scroll behavior
 (function() {
-  const header = document.getElementById('siteHeader');
-  if (!header) return;
-
-  function apply() {
-    const scrolled = window.scrollY > 50;
-    if (scrolled) {
-      header.classList.add('bg-black/95', 'backdrop-blur-sm', 'border-b', 'border-white/10');
-      header.classList.remove('bg-transparent');
-    } else {
-      header.classList.remove('bg-black/95', 'backdrop-blur-sm', 'border-b', 'border-white/10');
-      header.classList.add('bg-transparent');
+  'use strict';
+  
+  try {
+    const header = document.getElementById('siteHeader');
+    if (!header) {
+      // Header doesn't exist on this page, silently return
+      return;
     }
-  }
 
-  window.addEventListener('scroll', apply, { passive: true });
-  apply();
+    let ticking = false;
+
+    function apply() {
+      try {
+        const scrolled = window.scrollY > 50;
+        if (scrolled) {
+          header.classList.add('bg-black/95', 'backdrop-blur-sm', 'border-b', 'border-white/10');
+          header.classList.remove('bg-transparent');
+        } else {
+          header.classList.remove('bg-black/95', 'backdrop-blur-sm', 'border-b', 'border-white/10');
+          header.classList.add('bg-transparent');
+        }
+        ticking = false;
+      } catch (error) {
+        console.warn('Error applying header scroll styles:', error);
+        ticking = false;
+      }
+    }
+
+    function requestTick() {
+      if (!ticking) {
+        window.requestAnimationFrame(apply);
+        ticking = true;
+      }
+    }
+
+    if (typeof window.addEventListener === 'function') {
+      window.addEventListener('scroll', requestTick, { passive: true });
+      // Apply initial state
+      apply();
+    }
+  } catch (error) {
+    console.warn('Error initializing header scroll behavior:', error);
+  }
 })();
 
 // Mobile scroll-to-reveal blur text (reveal once, stays revealed)
 (function() {
-  const noHover = window.matchMedia && window.matchMedia('(hover: none)').matches;
-  if (!noHover) return;
+  'use strict';
+  
+  try {
+    // Check if device supports hover (desktop) - if so, skip mobile behavior
+    const noHover = window.matchMedia && window.matchMedia('(hover: none)').matches;
+    if (!noHover) return;
 
-  const els = Array.from(document.querySelectorAll('.blur-text'));
-  if (!els.length) return;
+    const els = Array.from(document.querySelectorAll('.blur-text'));
+    if (!els.length) return;
 
-  // Ensure they start blurred
-  els.forEach(el => el.classList.remove('is-revealed'));
-
-  // Fallback: if observer not supported, just reveal (don’t trap users in blur)
-  if (!('IntersectionObserver' in window)) {
-    els.forEach(el => el.classList.add('is-revealed'));
-    return;
-  }
-
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-revealed');
-          io.unobserve(entry.target);
-        }
+    // Ensure they start blurred
+    els.forEach(el => {
+      try {
+        el.classList.remove('is-revealed');
+      } catch (error) {
+        console.warn('Error removing is-revealed class:', error);
       }
-    },
-    {
-      threshold: 0.6,
-      // Reveal a bit earlier so it feels natural on mobile scrolling
-      rootMargin: "0px 0px -10% 0px"
-    }
-  );
+    });
 
-  els.forEach(el => io.observe(el));
+    // Fallback: if observer not supported, just reveal (don't trap users in blur)
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(el => {
+        try {
+          el.classList.add('is-revealed');
+        } catch (error) {
+          console.warn('Error adding is-revealed class:', error);
+        }
+      });
+      return;
+    }
+
+    let observer = null;
+    try {
+      observer = new IntersectionObserver(
+        (entries) => {
+          try {
+            for (const entry of entries) {
+              if (entry.isIntersecting && entry.target) {
+                entry.target.classList.add('is-revealed');
+                observer.unobserve(entry.target);
+              }
+            }
+          } catch (error) {
+            console.warn('Error in IntersectionObserver callback:', error);
+          }
+        },
+        {
+          threshold: 0.6,
+          // Reveal a bit earlier so it feels natural on mobile scrolling
+          rootMargin: "0px 0px -10% 0px"
+        }
+      );
+
+      els.forEach(el => {
+        try {
+          observer.observe(el);
+        } catch (error) {
+          console.warn('Error observing element:', error);
+        }
+      });
+    } catch (error) {
+      console.warn('Error creating IntersectionObserver:', error);
+      // Fallback: reveal all elements if observer creation fails
+      els.forEach(el => {
+        try {
+          el.classList.add('is-revealed');
+        } catch (err) {
+          console.warn('Error in fallback reveal:', err);
+        }
+      });
+    }
+  } catch (error) {
+    console.warn('Error initializing blur text reveal:', error);
+  }
 })();

@@ -1,3 +1,9 @@
+/**
+ * Blur Text Styles
+ * Desktop: blur until hover
+ * Mobile: blur until scrolled into view
+ */
+
 /* Desktop: blur until hover */
 .blur-text {
   filter: blur(3px);
@@ -23,9 +29,14 @@
   }
 }
 
-/* Accessibility */
+/* Accessibility: Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .blur-text {
+    filter: blur(0) !important;
     transition: none !important;
+  }
+  
+  .blur-text.is-revealed {
+    filter: blur(0) !important;
   }
 }
