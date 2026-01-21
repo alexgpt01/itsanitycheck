@@ -45,83 +45,65 @@
   }
 })();
 
-// Blur text reveal: unblur all once questions section is scrolled past
+// Blur text reveal: unblur each element as it scrolls into view
 (function() {
   'use strict';
   
   try {
-    const questionsSection = document.getElementById('questionsSection');
     const blurTextElements = Array.from(document.querySelectorAll('.blur-text'));
     
-    if (!questionsSection || !blurTextElements.length) return;
+    if (!blurTextElements.length) return;
 
-    let isRevealed = false;
+    // Function to reveal a single blur text element
+    function revealBlurText(element) {
+      try {
+        element.classList.add('is-revealed');
+      } catch (error) {
+        console.warn('Error revealing blur text:', error);
+      }
+    }
 
-    // Function to reveal all blur text
-    function revealAllBlurText() {
-      if (isRevealed) return; // Only reveal once
-      isRevealed = true;
+    // Check if IntersectionObserver is supported
+    if (!('IntersectionObserver' in window)) {
+      // Fallback: reveal all immediately if observer not supported
+      blurTextElements.forEach(el => revealBlurText(el));
+      return;
+    }
+
+    // Observe each blur text element individually
+    try {
+      const textObserver = new IntersectionObserver(
+        (entries) => {
+          try {
+            for (const entry of entries) {
+              // When element scrolls into view, reveal it
+              if (entry.isIntersecting && entry.target) {
+                revealBlurText(entry.target);
+                textObserver.unobserve(entry.target); // Stop observing once revealed
+              }
+            }
+          } catch (error) {
+            console.warn('Error in text observer callback:', error);
+          }
+        },
+        {
+          threshold: 0.8, // Reveal when 80% of element is visible
+          rootMargin: "0px 0px -40% 0px" // Require element to be more fully scrolled into view
+        }
+      );
+
+      // Observe each blur text element
       blurTextElements.forEach(el => {
         try {
-          el.classList.add('is-revealed');
+          textObserver.observe(el);
         } catch (error) {
-          console.warn('Error revealing blur text:', error);
+          console.warn('Error observing element:', error);
         }
       });
-    }
-
-    // Function to check if section has been scrolled past
-    function checkScrollPosition() {
-      if (isRevealed) return;
-      
-      try {
-        const rect = questionsSection.getBoundingClientRect();
-        // If the bottom of the section is above the top of the viewport, it's been scrolled past
-        if (rect.bottom < 0) {
-          revealAllBlurText();
-        }
-      } catch (error) {
-        console.warn('Error checking scroll position:', error);
-      }
-    }
-
-    // Use IntersectionObserver if available, otherwise fall back to scroll listener
-    if ('IntersectionObserver' in window) {
-      try {
-        const sectionObserver = new IntersectionObserver(
-          (entries) => {
-            try {
-              for (const entry of entries) {
-                // When the section bottom has passed the top of viewport
-                if (!entry.isIntersecting) {
-                  const rect = entry.boundingClientRect;
-                  if (rect.bottom < 0) {
-                    revealAllBlurText();
-                    sectionObserver.unobserve(entry.target);
-                  }
-                }
-              }
-            } catch (error) {
-              console.warn('Error in section observer callback:', error);
-            }
-          },
-          {
-            threshold: [0, 1],
-            rootMargin: "0px"
-          }
-        );
-
-        sectionObserver.observe(questionsSection);
-      } catch (error) {
-        console.warn('Error creating section observer:', error);
-        // Fallback to scroll listener
-        window.addEventListener('scroll', checkScrollPosition, { passive: true });
-        checkScrollPosition(); // Check initial state
-      }
-    } else {
-      // Fallback: use scroll listener
-      window.addEventListener('scroll', checkScrollPosition, { passive: true });
-      checkScrollPosition(); // Check initial state
+    } catch (error) {
+      console.warn('Error creating text observer:', error);
+      // Fallback: reveal all if observer creation fails
+      blurTextElements.forEach(el => revealBlurText(el));
     }
   } catch (error) {
     console.warn('Error initializing blur text reveal:', error);
