@@ -45,78 +45,83 @@
   }
 })();
 
-// Mobile scroll-to-reveal blur text (reveal once, stays revealed)
+// Blur text reveal: unblur all once questions section is scrolled past
 (function() {
   'use strict';
   
   try {
-    // Check if device supports hover (desktop) - if so, skip mobile behavior
-    const noHover = window.matchMedia && window.matchMedia('(hover: none)').matches;
-    if (!noHover) return;
+    const questionsSection = document.getElementById('questionsSection');
+    const blurTextElements = Array.from(document.querySelectorAll('.blur-text'));
+    
+    if (!questionsSection || !blurTextElements.length) return;
 
-    const els = Array.from(document.querySelectorAll('.blur-text'));
-    if (!els.length) return;
+    let isRevealed = false;
 
-    // Ensure they start blurred
-    els.forEach(el => {
-      try {
-        el.classList.remove('is-revealed');
-      } catch (error) {
-        console.warn('Error removing is-revealed class:', error);
-      }
-    });
-
-    // Fallback: if observer not supported, just reveal (don't trap users in blur)
-    if (!('IntersectionObserver' in window)) {
-      els.forEach(el => {
+    // Function to reveal all blur text
+    function revealAllBlurText() {
+      if (isRevealed) return; // Only reveal once
+      isRevealed = true;
+      blurTextElements.forEach(el => {
         try {
           el.classList.add('is-revealed');
         } catch (error) {
-          console.warn('Error adding is-revealed class:', error);
+          console.warn('Error revealing blur text:', error);
         }
       });
-      return;
     }
 
-    let observer = null;
-    try {
-      observer = new IntersectionObserver(
-        (entries) => {
-          try {
-            for (const entry of entries) {
-              if (entry.isIntersecting && entry.target) {
-                entry.target.classList.add('is-revealed');
-                observer.unobserve(entry.target);
-              }
-            }
-          } catch (error) {
-            console.warn('Error in IntersectionObserver callback:', error);
-          }
-        },
-        {
-          threshold: 0.6,
-          // Reveal a bit earlier so it feels natural on mobile scrolling
-          rootMargin: "0px 0px -10% 0px"
+    // Function to check if section has been scrolled past
+    function checkScrollPosition() {
+      if (isRevealed) return;
+      
+      try {
+        const rect = questionsSection.getBoundingClientRect();
+        // If the bottom of the section is above the top of the viewport, it's been scrolled past
+        if (rect.bottom < 0) {
+          revealAllBlurText();
         }
-      );
+      } catch (error) {
+        console.warn('Error checking scroll position:', error);
+      }
+    }
 
-      els.forEach(el => {
-        try {
-          observer.observe(el);
-        } catch (error) {
-          console.warn('Error observing element:', error);
-        }
-      });
-    } catch (error) {
-      console.warn('Error creating IntersectionObserver:', error);
-      // Fallback: reveal all elements if observer creation fails
-      els.forEach(el => {
-        try {
-          el.classList.add('is-revealed');
-        } catch (err) {
-          console.warn('Error in fallback reveal:', err);
-        }
-      });
+    // Use IntersectionObserver if available, otherwise fall back to scroll listener
+    if ('IntersectionObserver' in window) {
+      try {
+        const sectionObserver = new IntersectionObserver(
+          (entries) => {
+            try {
+              for (const entry of entries) {
+                // When the section bottom has passed the top of viewport
+                if (!entry.isIntersecting) {
+                  const rect = entry.boundingClientRect;
+                  if (rect.bottom < 0) {
+                    revealAllBlurText();
+                    sectionObserver.unobserve(entry.target);
+                  }
+                }
+              }
+            } catch (error) {
+              console.warn('Error in section observer callback:', error);
+            }
+          },
+          {
+            threshold: [0, 1],
+            rootMargin: "0px"
+          }
+        );
+
+        sectionObserver.observe(questionsSection);
+      } catch (error) {
+        console.warn('Error creating section observer:', error);
+        // Fallback to scroll listener
+        window.addEventListener('scroll', checkScrollPosition, { passive: true });
+        checkScrollPosition(); // Check initial state
+      }
+    } else {
+      // Fallback: use scroll listener
+      window.addEventListener('scroll', checkScrollPosition, { passive: true });
+      checkScrollPosition(); // Check initial state
     }
   } catch (error) {
     console.warn('Error initializing blur text reveal:', error);
