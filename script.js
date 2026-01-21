@@ -87,8 +87,8 @@
           }
         },
         {
-          threshold: 0.5, // Reveal when 50% of element is visible
-          rootMargin: "0px 0px -20% 0px" // Trigger a bit before fully in view
+          threshold: 0.8, // Reveal when 80% of element is visible
+          rootMargin: "0px 0px -40% 0px" // Require element to be more fully scrolled into view
         }
       );
 
