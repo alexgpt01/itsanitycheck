@@ -45,78 +45,62 @@
   }
 })();
 
-// Mobile scroll-to-reveal blur text (reveal once, stays revealed)
+// Blur text reveal: unblur all once questions section is scrolled past
 (function() {
   'use strict';
   
   try {
-    // Check if device supports hover (desktop) - if so, skip mobile behavior
-    const noHover = window.matchMedia && window.matchMedia('(hover: none)').matches;
-    if (!noHover) return;
+    const questionsSection = document.getElementById('questionsSection');
+    const blurTextElements = Array.from(document.querySelectorAll('.blur-text'));
+    
+    if (!questionsSection || !blurTextElements.length) return;
 
-    const els = Array.from(document.querySelectorAll('.blur-text'));
-    if (!els.length) return;
-
-    // Ensure they start blurred
-    els.forEach(el => {
-      try {
-        el.classList.remove('is-revealed');
-      } catch (error) {
-        console.warn('Error removing is-revealed class:', error);
-      }
-    });
-
-    // Fallback: if observer not supported, just reveal (don't trap users in blur)
-    if (!('IntersectionObserver' in window)) {
-      els.forEach(el => {
+    // Function to reveal all blur text
+    function revealAllBlurText() {
+      blurTextElements.forEach(el => {
         try {
           el.classList.add('is-revealed');
         } catch (error) {
-          console.warn('Error adding is-revealed class:', error);
+          console.warn('Error revealing blur text:', error);
         }
       });
+    }
+
+    // Check if IntersectionObserver is supported
+    if (!('IntersectionObserver' in window)) {
+      // Fallback: reveal all immediately if observer not supported
+      revealAllBlurText();
       return;
     }
 
-    let observer = null;
+    // Observe the questions section - when it's scrolled past, reveal all blur text
     try {
-      observer = new IntersectionObserver(
+      const sectionObserver = new IntersectionObserver(
         (entries) => {
           try {
             for (const entry of entries) {
-              if (entry.isIntersecting && entry.target) {
-                entry.target.classList.add('is-revealed');
-                observer.unobserve(entry.target);
+              // When the section is completely out of view (scrolled past)
+              if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+                revealAllBlurText();
+                sectionObserver.unobserve(entry.target);
               }
             }
           } catch (error) {
-            console.warn('Error in IntersectionObserver callback:', error);
+            console.warn('Error in section observer callback:', error);
           }
         },
         {
-          threshold: 0.6,
-          // Reveal a bit earlier so it feels natural on mobile scrolling
-          rootMargin: "0px 0px -10% 0px"
+          threshold: 0,
+          // Trigger when section top passes the top of viewport
+          rootMargin: "0px"
         }
       );
 
-      els.forEach(el => {
-        try {
-          observer.observe(el);
-        } catch (error) {
-          console.warn('Error observing element:', error);
-        }
-      });
+      sectionObserver.observe(questionsSection);
     } catch (error) {
-      console.warn('Error creating IntersectionObserver:', error);
-      // Fallback: reveal all elements if observer creation fails
-      els.forEach(el => {
-        try {
-          el.classList.add('is-revealed');
-        } catch (err) {
-          console.warn('Error in fallback reveal:', err);
-        }
-      });
+      console.warn('Error creating section observer:', error);
+      // Fallback: reveal all if observer creation fails
+      revealAllBlurText();
     }
   } catch (error) {
     console.warn('Error initializing blur text reveal:', error);

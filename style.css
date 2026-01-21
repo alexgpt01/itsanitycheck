@@ -1,10 +1,10 @@
 /**
  * Blur Text Styles
- * Desktop: blur until hover
- * Mobile: blur until scrolled into view
+ * Desktop: blur until hover OR until scrolled past questions section
+ * Mobile: blur until scrolled past questions section
  */
 
-/* Desktop: blur until hover */
+/* Desktop: blur until hover or until revealed */
 .blur-text {
   filter: blur(3px);
   transition: filter 0.3s ease, opacity 0.3s ease;
@@ -12,6 +12,12 @@
 
 .blur-text:hover {
   filter: blur(0);
+}
+
+/* When revealed (scrolled past questions section), always show unblurred */
+.blur-text.is-revealed {
+  filter: blur(0) !important;
+  opacity: 1;
 }
 
 /* Mobile: blur until scrolled into view */
