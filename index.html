@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>IT Sanity Check</title>
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Your custom CSS (blur behavior lives here, not inline) -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease;
+    }
+
+    .slide-up {
+      animation: slideUp 0.8s ease forwards;
+    }
+  </style>
+</head>
+
+<body class="bg-black text-white">
+  <!-- Minimal Header -->
+  <header id="siteHeader" class="fixed top-0 w-full z-50 transition-all bg-transparent">
+    <div class="max-w-6xl mx-auto px-6 md:px-12 py-5 flex justify-between items-center">
+      <div class="font-semibold text-xl tracking-wide">IT Sanity Check®</div>
+      <a href="#cta"
+        class="text-sm px-5 py-2 border border-white/30 hover:bg-white hover:text-black hover:border-white transition-all inline-block">
+        I need this
+      </a>
+    </div>
+  </header>
+
+  <!-- Opening - The Uncertainty List -->
+  <section class="min-h-screen flex items-center justify-center px-6 pt-20">
+    <div class="max-w-4xl">
+      <div class="mb-12 text-center slide-up">
+        <div class="text-xs tracking-widest uppercase text-white mb-8">
+          For CEOs &amp; CFOs
+        </div>
+        <h1 class="text-5xl md:text-7xl font-light mb-16 leading-tight tracking-tight">
+          You don't know
+        </h1>
+      </div>
+
+      <div class="space-y-6 mb-16 slide-up" style="animation-delay: 0.2s; opacity: 0;">
+        <div class="flex items-start gap-4 text-xl md:text-2xl font-light">
+          <div class="text-slate-600 mt-1">—</div>
+          <div><span class="text-slate-500">what IT is actually costing you beyond the invoice</span></div>
+        </div>
+        <div class="flex items-start gap-4 text-xl md:text-2xl font-light">
+          <div class="text-slate-600 mt-1">—</div>
+          <div><span class="text-slate-500">if IT helps or hurts the business</span></div>
+        </div>
+        <div class="flex items-start gap-4 text-xl md:text-2xl font-light">
+          <div class="text-slate-600 mt-1">—</div>
+          <div><span class="text-slate-500">are you vendors a choice or a dependency</span></div>
+        </div>
+        <div class="flex items-start gap-4 text-xl md:text-2xl font-light">
+          <div class="text-slate-600 mt-1">—</div>
+          <div><span class="text-slate-500">is resilience assumed or proven</span></div>
+        </div>
+      </div>
+
+      <div class="text-center text-lg text-slate-600 slide-up" style="animation-delay: 0.4s; opacity: 0;">
+        Scroll to find out why ↓
+      </div>
+    </div>
+  </section>
+
+  <!-- The Questions - Revealing Uncertainty -->
+  <section class="px-6 py-20 bg-white/5">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-light mb-4 text-center">
+        Try answering these
+      </h2>
+      <p class="text-center text-slate-500 mb-16">Without guessing. Without asking someone else.</p>
+
+      <div class="space-y-8">
+        <div class="bg-white/10 border border-white/20 p-8 hover:border-white/40 transition-all backdrop-blur-sm">
+          <div class="text-xl md:text-2xl font-medium mb-3">What's IT actually costing you that's not on the invoice?
+          </div>
+          <div class="text-sm text-slate-500 blur-text italic">Hidden costs, technical debt, opportunity cost</div>
+        </div>
+        <div class="bg-white/10 border border-white/20 p-8 hover:border-white/40 transition-all backdrop-blur-sm">
+          <div class="text-xl md:text-2xl font-medium mb-3">Is your IT setup a business asset or a liability?</div>
+          <div class="text-sm text-slate-500 blur-text italic">Enables growth or holds you back</div>
+        </div>
+        <div class="bg-white/10 border border-white/20 p-8 hover:border-white/40 transition-all backdrop-blur-sm">
+          <div class="text-xl md:text-2xl font-medium mb-3">Could you switch vendors, or are you locked in?</div>
+          <div class="text-sm text-slate-500 blur-text italic">Data portability, contract terms, dependencies</div>
+        </div>
+        <div class="bg-white/10 border border-white/20 p-8 hover:border-white/40 transition-all backdrop-blur-sm">
+          <div class="text-xl md:text-2xl font-medium mb-3">When IT fails, what's the actual cost to your business?
+          </div>
+          <div class="text-sm text-slate-500 blur-text italic">Revenue loss, productivity impact, recovery time</div>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <p class="text-lg text-slate-400 mb-6">
+          If you're hesitating on any of these, that's uncertainty.
+        </p>
+        <p class="text-xl font-medium text-white">
+          Uncertainty is expensive.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Cost of Not Knowing -->
+  <section class="px-6 py-20 bg-black">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl md:text-5xl font-light mb-12 text-center">
+        What uncertainty costs you
+      </h2>
+      <div class="space-y-8">
+        <div class="border-l-2 border-white/30 pl-6 hover:border-white transition-all">
+          <div class="text-xl font-medium mb-2">You can't make confident decisions</div>
+          <div class="text-slate-500">Every IT investment feels like a gamble</div>
+        </div>
+        <div class="border-l-2 border-white/30 pl-6 hover:border-white transition-all">
+          <div class="text-xl font-medium mb-2">You're dependent on whoever knows</div>
+          <div class="text-slate-500">One person, one vendor, one point of failure</div>
+        </div>
+        <div class="border-l-2 border-white/30 pl-6 hover:border-white transition-all">
+          <div class="text-xl font-medium mb-2">You can't defend your budget</div>
+          <div class="text-slate-500">To your board, your investors, yourself</div>
+        </div>
+        <div class="border-l-2 border-white/30 pl-6 hover:border-white transition-all">
+          <div class="text-xl font-medium mb-2">You lose sleep</div>
+          <div class="text-slate-500">Because you know you don't know</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Alternative - Clarity -->
+  <section class="px-6 py-20 bg-white/5">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl md:text-5xl font-light mb-8">
+        Or you could know
+      </h2>
+      <p class="text-xl text-slate-400 mb-12 leading-relaxed">
+        Not from the vendor billing you. Not from someone selling you something else. From an independent assessment
+        that has no agenda except the truth.
+      </p>
+      <div class="bg-white/10 border-2 border-white/20 p-10 backdrop-blur-sm">
+        <div class="text-2xl font-medium mb-6">Four pillars. One verdict.</div>
+        <div class="grid md:grid-cols-2 gap-4 text-left mb-8">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-slate-400 rounded-full"></div>
+            <div>Cost</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-slate-400 rounded-full"></div>
+            <div>Complexity</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-slate-400 rounded-full"></div>
+            <div>Dependency</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-slate-400 rounded-full"></div>
+            <div>Resilience</div>
+          </div>
+        </div>
+        <p class="text-slate-400 leading-relaxed">
+          We evaluate your IT against your business size and complexity. We tell you what's working, what's not, and
+          what it costs you to ignore.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scenarios - When Uncertainty Peaks -->
+  <section class="px-6 py-20 bg-black">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl font-light mb-4 text-center">When you need this most</h2>
+      <p class="text-center text-slate-500 mb-12">Moments when uncertainty becomes unbearable</p>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div
+          class="bg-white/5 border border-white/10 p-6 hover:bg-white/10 hover:border-white/20 transition-all backdrop-blur-sm">
+          <p class="text-slate-300">Your IT vendor or staff just quit and you don't know what they managed</p>
+        </div>
+        <div
+          class="bg-white/5 border border-white/10 p-6 hover:bg-white/10 hover:border-white/20 transition-all backdrop-blur-sm">
+          <p class="text-slate-300">You're in M&amp;A and need straight answsers</p>
+        </div>
+        <div
+          class="bg-white/5 border border-white/10 p-6 hover:bg-white/10 hover:border-white/20 transition-all backdrop-blur-sm">
+          <p class="text-slate-300">Costs jumped and no one can explain why</p>
+        </div>
+        <div
+          class="bg-white/5 border border-white/10 p-6 hover:bg-white/10 hover:border-white/20 transition-all backdrop-blur-sm">
+          <p class="text-slate-300">You're about to sign a 3-year contract</p>
+        </div>
+        <div
+          class="bg-white/5 border border-white/10 p-6 hover:bg-white/10 hover:border-white/20 transition-all backdrop-blur-sm">
+          <p class="text-slate-300">Something feels wrong but you don't know what</p>
+        </div>
+        <div
+          class="bg-white/5 border border-white/10 p-6 hover:bg-white/10 hover:border-white/20 transition-all backdrop-blur-sm">
+          <p class="text-slate-300">Your board wants IT risk assessment</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works - Simple Process -->
+  <section class="px-6 py-20 bg-white/5">
+    <div class="max-w-2xl mx-auto">
+      <div class="space-y-10">
+        <div class="flex gap-6">
+          <div class="text-5xl font-light text-slate-700">1</div>
+          <div>
+            <div class="font-medium mb-2">You send us the basics</div>
+            <div class="text-slate-400">IT ownership, spending, tools list, backup reports, priviledged accounts</div>
+          </div>
+        </div>
+        <div class="flex gap-6">
+          <div class="text-5xl font-light text-slate-700">2</div>
+          <div>
+            <div class="font-medium mb-2">We evaluate structural sanity</div>
+            <div class="text-slate-400">Not compliance, not best practices, just whether this makes sense for your
+              business</div>
+          </div>
+        </div>
+        <div class="flex gap-6">
+          <div class="text-5xl font-light text-slate-700">3</div>
+          <div>
+            <div class="font-medium mb-2">You get clarity</div>
+            <div class="text-slate-400">PDF report in 5-7 days with clear verdict and implications</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA - Resolution -->
+  <section id="cta" class="px-6 py-24 bg-black text-white text-center border-t border-white/10">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-light mb-6">
+        Stop wondering
+      </h2>
+      <p class="text-xl text-slate-400 mb-12">
+        Get the answer in one week
+      </p>
+      <button onclick="window.location.href='/getmyreport.html'"
+        class="bg-white text-black px-12 py-5 text-base font-medium hover:bg-slate-100 transition-all hover:shadow-2xl">
+        Get My Report
+      </button>
+
+      <p class="mt-8 text-sm text-slate-600">One assessment · No Contracts · 5-7 days</p>
+    </div>
+  </section>
+
+  <!-- Load JS after the DOM exists -->
+  <script src="script.js"></script>
+</body>
+
+</html>
